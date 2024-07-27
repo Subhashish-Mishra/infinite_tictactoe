@@ -11,7 +11,7 @@ class GameView extends StatelessWidget {
       for (var col = 0; col < viewModel.gridSize; col++) {
         boxes.add(
           GestureDetector(
-            onTap: () => viewModel.placeCrossCircle(row, col),
+            onTapDown: (_) => viewModel.placeCrossCircle(row, col),
             child: Container(
               width: resSize,
               height: resSize,
@@ -47,6 +47,35 @@ class GameView extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: rows,
+    );
+  }
+
+  Widget disaperingModeButton(double width, double height) {
+    List<Widget> disaperingMode = [
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        child: Text(
+          "Disappering Mode",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      Transform.scale(
+        scale: 0.8,
+        child: CupertinoSwitch(
+          trackColor: Colors.grey[800],
+          activeColor: Colors.grey,
+          value: viewModel.disaperingMode,
+          onChanged: viewModel.toggleDisaperingMode,
+        ),
+      ),
+    ];
+    return OverflowBar(
+      overflowAlignment: OverflowBarAlignment.center,
+      alignment: MainAxisAlignment.center,
+      overflowDirection: VerticalDirection.up,
+      children: disaperingMode,
     );
   }
 
@@ -116,29 +145,9 @@ class GameView extends StatelessWidget {
                           ),
                           Expanded(
                             flex: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text(
-                                    "Disappering Mode",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Transform.scale(
-                                  scale: 0.8,
-                                  child: CupertinoSwitch(
-                                    trackColor: Colors.grey[800],
-                                    activeColor: Colors.grey,
-                                    value: viewModel.disaperingMode,
-                                    onChanged: viewModel.toggleDisaperingMode,
-                                  ),
-                                ),
-                              ],
+                            child: disaperingModeButton(
+                              constraints.maxWidth,
+                              constraints.maxHeight,
                             ),
                           ),
                         ],
