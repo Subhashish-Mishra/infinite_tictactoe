@@ -4,7 +4,7 @@ class GameView extends StatelessWidget {
   const GameView({super.key, required this.viewModel});
   final GameViewModel viewModel;
 
-  Widget createGrid(double resSize, Queue<TicTacModel> places) {
+  Widget createGrid(double resSize, List<List<TicTacModel?>> places) {
     List<Row> rows = [];
     for (var row = 0; row < viewModel.gridSize; row++) {
       List<Widget> boxes = [];
@@ -21,10 +21,9 @@ class GameView extends StatelessWidget {
               child: Center(
                 child: Builder(
                   builder: (context) {
-                    TicTacModel tictak = places.firstWhere(
-                      (element) => element.xPos == row && element.yPos == col,
-                      orElse: () => TicTacModel.empty(),
-                    );
+                    TicTacModel tictak =
+                        places[row][col] ?? TicTacModel.empty();
+
                     return Icon(
                       tictak.icon,
                       size: resSize,
@@ -82,6 +81,7 @@ class GameView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: scaffoldMessagerKey,
       home: Scaffold(
         backgroundColor: Theme.of(context).disabledColor,
         body: Center(
@@ -97,7 +97,7 @@ class GameView extends StatelessWidget {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    createGrid(resSize, viewModel.queue),
+                    createGrid(resSize, viewModel.placeList),
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: Row(

@@ -1,14 +1,25 @@
 part of 'imports.dart';
 
 class GameViewModel extends ChangeNotifier {
-  GameViewModel();
+  GameViewModel() {
+    _init();
+  }
 
   final gridSize = 3;
 
   bool isCross = false;
   bool disaperingMode = false;
 
-  Queue<TicTacModel> queue = Queue();
+  Queue<TicTacModel> placeQueue = Queue();
+  List<List<TicTacModel?>> placeList = [];
+
+  void _init() {
+    placeList = createEmptyState();
+  }
+
+  List<List<TicTacModel?>> createEmptyState() {
+    return List.generate(gridSize, (i) => List.generate(gridSize, (j) => null));
+  }
 
   void toggleDisaperingMode(bool value) {
     disaperingMode = value;
@@ -17,15 +28,22 @@ class GameViewModel extends ChangeNotifier {
   }
 
   void placeCrossCircle(int row, int col) {
-    if (queue.length == 9) {
+    if (placeList[row][col] != null) {
+      showSnackBar("Wrong move bro!");
+      return;
+    }
+    if (placeQueue.length == 9) {
       return;
     }
     if (disaperingMode) {
-      if (queue.length == 7) {
-        queue.removeFirst();
+      if (placeQueue.length == 7) {
+        var first = placeQueue.first;
+        placeList[first.xPos][first.yPos] = null;
+        placeQueue.removeFirst();
       }
-      if (queue.length == 6) {
-        queue.first.color = Colors.grey;
+      if (placeQueue.length == 6) {
+        var first = placeQueue.first;
+        placeList[first.xPos][first.yPos]!.color = Colors.grey;
       }
     }
     IconData icon;
@@ -34,19 +52,21 @@ class GameViewModel extends ChangeNotifier {
     } else {
       icon = Icons.radio_button_unchecked;
     }
-    queue.add(
-      TicTacModel(
-        xPos: row,
-        yPos: col,
-        icon: icon,
-      ),
+    var tictac = TicTacModel(
+      xPos: row,
+      yPos: col,
+      icon: icon,
     );
+    placeList[row][col] = tictac;
+    placeQueue.add(tictac);
     isCross = !isCross;
+    print("${placeList.length}, ${placeQueue.length}");
     notifyListeners();
   }
 
   void reset() {
-    queue.clear();
+    placeList = createEmptyState();
+    placeQueue.clear();
     notifyListeners();
   }
 
@@ -81,6 +101,6 @@ class TicTacModel {
 
   @override
   String toString() {
-    return "($xPos,$yPos,${color.toString()},)";
+    return "($xPos,$yPos)";
   }
 }
