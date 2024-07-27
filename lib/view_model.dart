@@ -36,12 +36,12 @@ class GameViewModel extends ChangeNotifier {
       return;
     }
     if (disaperingMode) {
-      if (placeQueue.length == 7) {
+      if (placeQueue.length == 6) {
         var first = placeQueue.first;
         placeList[first.xPos][first.yPos] = null;
         placeQueue.removeFirst();
       }
-      if (placeQueue.length == 6) {
+      if (placeQueue.length == 5) {
         var first = placeQueue.first;
         placeList[first.xPos][first.yPos]!.color = Colors.grey;
       }
@@ -141,7 +141,6 @@ class TicTacModel {
   final int yPos;
   Color? color;
   PlaceType type;
-  // PlaceType _type = PlaceType.none;
 
   IconData? _icon;
   IconData? get icon => _icon;
