@@ -46,22 +46,78 @@ class GameViewModel extends ChangeNotifier {
         placeList[first.xPos][first.yPos]!.color = Colors.grey;
       }
     }
-    IconData icon;
+    PlaceType type;
     if (isCross) {
-      icon = Icons.close;
+      type = PlaceType.cross;
     } else {
-      icon = Icons.radio_button_unchecked;
+      type = PlaceType.circle;
     }
     var tictac = TicTacModel(
       xPos: row,
       yPos: col,
-      icon: icon,
+      type: type,
     );
     placeList[row][col] = tictac;
     placeQueue.add(tictac);
     isCross = !isCross;
-    print("${placeList.length}, ${placeQueue.length}");
+    // print("${placeList.length}, ${placeQueue.length}");
+    checkWin();
     notifyListeners();
+  }
+
+  void checkWin() {
+    if (checkDiagonal() || chekcRow() || checkColumn()) {
+      showSnackBar("GAME WON!");
+    }
+  }
+
+  bool checkDiagonal() {
+    if (placeList[0][0] == placeList[1][1] &&
+        placeList[1][1] == placeList[2][2] &&
+        placeList[0][0] != null) {
+      return true;
+    }
+    if (placeList[0][2] == placeList[1][1] &&
+        placeList[1][1] == placeList[2][0] &&
+        placeList[0][2] != null) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool checkColumn() {
+    for (int i = 0; i < gridSize; i++) {
+      if (placeList[0][i] == placeList[1][i] &&
+          placeList[1][i] == placeList[2][i] &&
+          placeList[0][i] != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool chekcRow() {
+    for (int i = 0; i < gridSize; i++) {
+      if (placeList[i][0] == placeList[i][1] &&
+          placeList[i][1] == placeList[i][2] &&
+          placeList[i][0] != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool checkDraw() {
+    bool isDraw = false;
+    for (int i = 0; i < gridSize; i++) {
+      for (int j = 0; j < gridSize; j++) {
+        if (placeList[i][j] == null) {
+          isDraw = true;
+        }
+      }
+    }
+    return isDraw;
   }
 
   void reset() {
@@ -69,38 +125,53 @@ class GameViewModel extends ChangeNotifier {
     placeQueue.clear();
     notifyListeners();
   }
-
-  IconData getIcon() {
-    if (isCross) {
-      return Icons.close;
-    } else {
-      return Icons.radio_button_unchecked;
-    }
-  }
 }
 
 class TicTacModel {
   TicTacModel({
     required this.xPos,
     required this.yPos,
-    this.icon,
     this.color = Colors.white,
-  });
+    required this.type,
+  }) {
+    setIcon(type);
+  }
 
   final int xPos;
   final int yPos;
-  final IconData? icon;
   Color? color;
+  PlaceType type;
+  // PlaceType _type = PlaceType.none;
+
+  IconData? _icon;
+  IconData? get icon => _icon;
+
+  void setIcon(PlaceType value) {
+    if (value == PlaceType.cross) {
+      _icon = Icons.close;
+    } else if (value == PlaceType.circle) {
+      _icon = Icons.radio_button_unchecked;
+    }
+  }
 
   factory TicTacModel.empty() {
     return TicTacModel(
       xPos: 0,
       yPos: 0,
+      type: PlaceType.none,
     );
   }
 
   @override
   String toString() {
-    return "($xPos,$yPos)";
+    return "($xPos,$yPos,$type,$icon)";
   }
+
+  @override
+  bool operator ==(other) => other is TicTacModel && other.type == type;
+
+  @override
+  int get hashCode => Object.hash(xPos.hashCode, yPos.hashCode);
 }
+
+enum PlaceType { none, cross, circle }
