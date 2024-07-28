@@ -76,14 +76,27 @@ class GameViewModel extends ChangeNotifier {
   }
 
   bool checkDiagonal() {
-    if (placeList[0][0] == placeList[1][1] &&
-        placeList[1][1] == placeList[2][2] &&
-        placeList[0][0] != null) {
+    bool diag1Win = true;
+    for (int i = 1; i < gridSize; i++) {
+      if (placeList[i][i] != placeList[0][0] || placeList[0][0] == null) {
+        diag1Win = false;
+        break;
+      }
+    }
+    if (diag1Win) {
+      // return "${placeList[0][0]} wins!";
       return true;
     }
-    if (placeList[0][2] == placeList[1][1] &&
-        placeList[1][1] == placeList[2][0] &&
-        placeList[0][2] != null) {
+    bool diag2Win = true;
+    for (int i = 1; i < gridSize; i++) {
+      if (placeList[i][gridSize - 1 - i] != placeList[0][gridSize - 1] ||
+          placeList[0][gridSize - 1] == null) {
+        diag2Win = false;
+        break;
+      }
+    }
+    if (diag2Win) {
+      // return "${placeList[0][gridSize - 1]} wins!";
       return true;
     }
 
@@ -92,9 +105,15 @@ class GameViewModel extends ChangeNotifier {
 
   bool checkColumn() {
     for (int i = 0; i < gridSize; i++) {
-      if (placeList[0][i] == placeList[1][i] &&
-          placeList[1][i] == placeList[2][i] &&
-          placeList[0][i] != null) {
+      bool colWin = true;
+      for (int j = 1; j < gridSize; j++) {
+        if (placeList[j][i] != placeList[0][i] || placeList[0][i] == null) {
+          colWin = false;
+          break;
+        }
+      }
+      if (colWin) {
+        // return "${placeList[0][i]} wins!";
         return true;
       }
     }
@@ -103,9 +122,15 @@ class GameViewModel extends ChangeNotifier {
 
   bool chekcRow() {
     for (int i = 0; i < gridSize; i++) {
-      if (placeList[i][0] == placeList[i][1] &&
-          placeList[i][1] == placeList[i][2] &&
-          placeList[i][0] != null) {
+      bool rowWin = true;
+      for (int j = 1; j < gridSize; j++) {
+        if (placeList[i][j] != placeList[i][0] || placeList[i][0] == null) {
+          rowWin = false;
+          break;
+        }
+      }
+      if (rowWin) {
+        // return "${placeList[i][0]} wins!";
         return true;
       }
     }
