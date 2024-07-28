@@ -7,6 +7,8 @@ class GameViewModel extends ChangeNotifier {
 
   final gridSize = 3;
 
+  bool isGameWon = false;
+
   bool isCross = false;
   bool disaperingMode = false;
 
@@ -61,14 +63,16 @@ class GameViewModel extends ChangeNotifier {
     placeQueue.add(tictac);
     isCross = !isCross;
     // print("${placeList.length}, ${placeQueue.length}");
-    checkWin();
+    isGameWon = checkWin();
     notifyListeners();
   }
 
-  void checkWin() {
+  bool checkWin() {
     if (checkDiagonal() || chekcRow() || checkColumn()) {
       showSnackBar("GAME WON!");
+      return true;
     }
+    return false;
   }
 
   bool checkDiagonal() {
@@ -123,6 +127,7 @@ class GameViewModel extends ChangeNotifier {
   void reset() {
     placeList = createEmptyState();
     placeQueue.clear();
+    isGameWon = false;
     notifyListeners();
   }
 }
