@@ -5,7 +5,7 @@ class GameView extends StatelessWidget {
   final GameViewModel viewModel;
 
   Widget createGrid(double resSize, List<List<TicTacModel?>> places) {
-    List<Row> rows = [];
+    List<Widget> rows = [];
     for (var row = 0; row < viewModel.gridSize; row++) {
       List<Widget> boxes = [];
       for (var col = 0; col < viewModel.gridSize; col++) {
@@ -16,7 +16,11 @@ class GameView extends StatelessWidget {
               width: resSize,
               height: resSize,
               decoration: BoxDecoration(
-                border: Border.all(width: 2.0, color: Colors.white),
+                // color: Colors.white24,
+                // border: Border.all(width: 2.0, color: Colors.white),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(40 / viewModel.gridSize),
+                ),
               ),
               child: Center(
                 child: Builder(
@@ -35,17 +39,39 @@ class GameView extends StatelessWidget {
             ),
           ),
         );
+        if (col < viewModel.gridSize - 1) {
+          boxes.add(
+            const VerticalDivider(
+              color: Colors.white,
+              // width: 2,
+              thickness: 2,
+            ),
+          );
+        }
       }
       rows.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: boxes,
+        IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: boxes,
+          ),
         ),
       );
+      if (row < viewModel.gridSize - 1) {
+        rows.add(
+          const Divider(
+            color: Colors.white,
+            // height: 2,
+            thickness: 2,
+          ),
+        );
+      }
     }
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: rows,
+    return IntrinsicWidth(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: rows,
+      ),
     );
   }
 
@@ -129,9 +155,10 @@ class GameView extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 var resSize = min(
-                  constraints.maxWidth / viewModel.gridSize,
-                  (constraints.maxHeight - 200) / viewModel.gridSize,
-                );
+                      constraints.maxWidth / viewModel.gridSize,
+                      (constraints.maxHeight - 200) / viewModel.gridSize,
+                    ) -
+                    16;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
