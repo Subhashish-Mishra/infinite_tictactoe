@@ -134,8 +134,9 @@ class GameView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AbsorbPointer(
-                        absorbing: viewModel.isGameWon,
-                        child: createGrid(resSize, viewModel.placeList)),
+                      absorbing: viewModel.isGameWon,
+                      child: createGrid(resSize, viewModel.placeList),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: Row(
