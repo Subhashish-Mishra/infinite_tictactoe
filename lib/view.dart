@@ -100,15 +100,17 @@ class GameView extends StatelessWidget {
     return OverflowBar(
       overflowAlignment: OverflowBarAlignment.center,
       alignment: MainAxisAlignment.center,
+      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
           "Modes: ",
           style: TextStyle(color: Colors.white, fontSize: 16.0),
         ),
-        OverflowBar(
-          overflowAlignment: OverflowBarAlignment.center,
-          alignment: MainAxisAlignment.center,
-          children: selectorRow,
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: OverflowBar(
+            children: selectorRow,
+          ),
         ),
       ],
     );
