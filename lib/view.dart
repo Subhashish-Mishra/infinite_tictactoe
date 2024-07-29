@@ -78,6 +78,42 @@ class GameView extends StatelessWidget {
     );
   }
 
+  Widget createGridSizeSelector() {
+    List<Widget> selectorRow = [];
+    for (var i = 3; i < 10; i = i + 2) {
+      selectorRow.add(
+        InkWell(
+          onTap: () => viewModel.setGridSize(i),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(width: 1.0, color: Colors.white),
+            ),
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "$i",
+              style: const TextStyle(color: Colors.white, fontSize: 16.0),
+            ),
+          ),
+        ),
+      );
+    }
+    return OverflowBar(
+      overflowAlignment: OverflowBarAlignment.center,
+      alignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Modes: ",
+          style: TextStyle(color: Colors.white, fontSize: 16.0),
+        ),
+        OverflowBar(
+          overflowAlignment: OverflowBarAlignment.center,
+          alignment: MainAxisAlignment.center,
+          children: selectorRow,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -87,12 +123,12 @@ class GameView extends StatelessWidget {
         body: Center(
           child: SizedBox(
             width: 1000,
-            height: 1080,
+            height: 1200,
             child: LayoutBuilder(
               builder: (context, constraints) {
                 var resSize = min(
                   constraints.maxWidth / viewModel.gridSize,
-                  (constraints.maxHeight - 80) / viewModel.gridSize,
+                  (constraints.maxHeight - 200) / viewModel.gridSize,
                 );
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -105,7 +141,10 @@ class GameView extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const Expanded(flex: 1, child: SizedBox.shrink()),
+                          Expanded(
+                            flex: 1,
+                            child: createGridSizeSelector(),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

@@ -5,7 +5,7 @@ class GameViewModel extends ChangeNotifier {
     _init();
   }
 
-  final gridSize = 3;
+  int gridSize = 3;
 
   bool isGameWon = false;
 
@@ -34,16 +34,17 @@ class GameViewModel extends ChangeNotifier {
       showSnackBar("Wrong move bro!");
       return;
     }
-    if (placeQueue.length == 9) {
+    var maxSize = pow(gridSize, 2);
+    if (placeQueue.length == maxSize) {
       return;
     }
     if (disaperingMode) {
-      if (placeQueue.length == 6) {
+      if (placeQueue.length == maxSize - gridSize) {
         var first = placeQueue.first;
         placeList[first.xPos][first.yPos] = null;
         placeQueue.removeFirst();
       }
-      if (placeQueue.length == 5) {
+      if (placeQueue.length == maxSize - gridSize - 1) {
         var first = placeQueue.first;
         placeList[first.xPos][first.yPos]!.color = Colors.grey;
       }
@@ -153,6 +154,12 @@ class GameViewModel extends ChangeNotifier {
     placeList = createEmptyState();
     placeQueue.clear();
     isGameWon = false;
+    notifyListeners();
+  }
+
+  void setGridSize(int size) {
+    gridSize = size;
+    reset();
     notifyListeners();
   }
 }
